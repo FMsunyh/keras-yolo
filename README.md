@@ -1,1 +1,34 @@
 # keras-yolo
+## 网络结构详细参数
+- Layers	        Parameters
+- Input Data	    Images Size: 448×448
+- Convolution	    num_filters: 64, kernel size: 7×7, stride: 2​
+- Max Pooling	    kernel size: 2×2, stride: 2
+- Convolution	    num_filters: 192, kernel size: 3×3, stride: 1
+- Max Pooling	    kernel size: 2×2, stride: 2
+- Convolution	    num_filters: 128, kernel size: 1×1, stride: 1
+- Convolution	    num_filters: 256, kernel size: 3×3, stride: 1
+- Convolution	    num_filters: 256, kernel size: 1×1, stride: 1
+- Convolution	    num_filters: 512, kernel size: 3×3, stride: 1
+- Max Pooling	    kernel size: 2×2, stride: 2
+- Convolution	    num_filters: 256, kernel size: 1×1, stride: 1
+- Convolution	    num_filters: 512, kernel size: 3×3, stride: 1
+- Convolution	    num_filters: 256, kernel size: 1×1, stride: 1
+- Convolution	    num_filters: 512, kernel size: 3×3, stride: 1
+- Convolution	    num_filters: 256, kernel size: 1×1, stride: 1
+- Convolution	    num_filters: 512, kernel size: 3×3, stride: 1
+- Convolution	    num_filters: 256, kernel size: 1×1, stride: 1
+- Convolution	    num_filters: 512, kernel size: 3×3, stride: 1
+- Convolution	    num_filters: 512, kernel size: 1×1, stride: 1
+- Convolution	    num_filters: 1024, kernel size: 3×3, stride: 1
+- Max Pooling	    kernel size: 2×2, stride: 2  
+- Convolution	    num_filters: 512, kernel size: 1×1, stride: 1
+- Convolution	    num_filters: 1024, kernel size: 3×3, stride: 1
+- Convolution	    num_filters: 512, kernel size: 1×1, stride: 1
+- Convolution	    num_filters: 1024, kernel size: 3×3, stride: 1
+- Convolution	    num_filters: 1024, kernel size: 3×3, stride: 1
+- Convolution	    num_filters: 1024, kernel size: 3×3, stride: 2
+- Convolution	    num_filters: 1024, kernel size: 3×3, stride: 1
+- Convolution	    num_filters: 1024, kernel size: 3×3, stride: 1
+- Fully Connected Layer	    Input Number: 1024, Output Number: 4096
+- Fully Connected Layer	    Input Number: 4096, Output Number: 7×7×30
