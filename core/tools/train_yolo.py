@@ -37,8 +37,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 def create_model():
     image = keras.layers.Input((448, 448, 3))
     # image = keras.layers.Input((None, None, 3))
-    gt_boxes = keras.layers.Input((None, 5))
-    return create_yolo([image, gt_boxes], num_classes=21, weights=None)
+    gt_boxes = keras.layers.Input((7, 7, 25))
+    return create_yolo([image, gt_boxes], num_classes=20, weights=None)
 
 def parse_args():
     """Parse input arguments."""
@@ -71,50 +71,50 @@ if __name__ == '__main__':
     # print model summary
     print(model.summary(line_length=180))
 
-    # # create image data generator objects
-    # train_image_data_generator = keras.preprocessing.image.ImageDataGenerator(
-    #     rescale=1.0 / 255.0,
-    #     horizontal_flip=True,
-    #     vertical_flip=True,
-    #     width_shift_range=0.1,
-    #     height_shift_range=0.1,
-    #     zoom_range=0.1,
-    # )
-    # test_image_data_generator = keras.preprocessing.image.ImageDataGenerator(
-    #     rescale=1.0 / 255.0,
-    # )
-    #
-    # # create a generator for training data
-    # train_generator = PascalVocGenerator(
-    #     args.pascal_path,
-    #     'trainval',
-    #     transform_generator = train_image_data_generator
-    # )
-    #
-    # # create a generator for testing data
-    # test_generator = PascalVocGenerator(
-    #     args.pascal_path,
-    #     'test',
-    #     transform_generator = test_image_data_generator
-    # )
-    #
-    # # start training
-    # batch_size = 1
-    # model.fit_generator(
-    #     generator=train_generator,
-    #     steps_per_epoch=len(train_generator.image_names) // batch_size,
-    #     epochs=100,
-    #     verbose=1,
-    #     validation_data=test_generator,
-    #     validation_steps=500,  # len(test_generator.image_names) // batch_size,
-    #     callbacks=[
-    #         keras.callbacks.ModelCheckpoint(os.path.join(args.root_path, 'snapshots/vgg16_frcnn_voc_best.h5'), monitor='val_loss', verbose=1, mode='min', save_best_only=True),
-    #         keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=1, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0),
-    #     ],
-    # )
-    #
-    # # store final result too
-    # model.save('snapshots/vgg16_voc_final.h5')
+    # create image data generator objects
+    train_image_data_generator = keras.preprocessing.image.ImageDataGenerator(
+        rescale=1.0 / 255.0,
+        horizontal_flip=True,
+        vertical_flip=True,
+        width_shift_range=0.1,
+        height_shift_range=0.1,
+        zoom_range=0.1,
+    )
+    test_image_data_generator = keras.preprocessing.image.ImageDataGenerator(
+        rescale=1.0 / 255.0,
+    )
+
+    # create a generator for training data
+    train_generator = PascalVocGenerator(
+        args.pascal_path,
+        'trainval',
+        transform_generator = train_image_data_generator
+    )
+
+    # create a generator for testing data
+    test_generator = PascalVocGenerator(
+        args.pascal_path,
+        'test',
+        transform_generator = test_image_data_generator
+    )
+
+    # start training
+    batch_size = 2
+    model.fit_generator(
+        generator=train_generator,
+        steps_per_epoch=len(train_generator.image_names) // batch_size,
+        epochs=100,
+        verbose=1,
+        validation_data=test_generator,
+        validation_steps=500,  # len(test_generator.image_names) // batch_size,
+        callbacks=[
+            keras.callbacks.ModelCheckpoint(os.path.join(args.root_path, 'snapshots/yolo(v1)_voc_best.h5'), monitor='val_loss', verbose=1, mode='min', save_best_only=True),
+            keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=1, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0),
+        ],
+    )
+
+    # store final result too
+    model.save('snapshots/yolo(v1)_voc_best.h5')
 
 
     '''

@@ -106,6 +106,8 @@ class Yolo(object):
         self.out_22     = self._Conv2D_BN_Leaky(1024, kernel_size=(3, 3), strides=(1, 1), name='conv_22')
         self.out_23     = self._Conv2D_BN_Leaky(1024, kernel_size=(3, 3), strides=(1, 1), name='conv_23')
 
+        self.flatten = keras.layers.Flatten(name='Flatten')
+        self.fc_0 = keras.layers.Dense(units=512,name='fc_0')
         self.fc_1 = keras.layers.Dense(units=4096,name='fc_1')
         self.fc_2 = keras.layers.Dense(units=7*7*30, name='fc_2')
 
@@ -154,10 +156,12 @@ class Yolo(object):
         x = self.out_21(x)
         x = self.out_22(x)
         x = self.out_23(x)
+        x = self.flatten(x)
+        x = self.fc_0(x)
         x = self.fc_1(x)
         x = self.fc_2(x)
 
         if self.training:
-            loss = self.loss([x, gt_boxes])
+            cls_loss, object_loss, noobject_loss, coord_loss = self.loss([x, gt_boxes])
 
-        return loss, x,
+        return cls_loss, object_loss, noobject_loss, coord_loss, x

@@ -16,27 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 # -----------------------------------------------------
-# @Time    : 12/5/2018 1:37 PM
+# @Time    : 12/10/2018 2:12 PM
 # @Author  : Firmin.Sun (fmsunyh@gmail.com)
 # @Software: ZJ_AI
 # -----------------------------------------------------
 # -*- coding: utf-8 -*-
-
-import keras
-import core
-from core.models import Yolo
-
-
-def create_yolo(inputs, training=True, num_classes=21, weights=None, *args, **kwargs):
-    if training:
-        image, gt_boxes = inputs
-        image_shape = core.layers.Dimensions()(image)
-    else:
-        image = inputs
-        image_shape = core.layers.Dimensions()(image)
-
-    cls_loss, object_loss, noobject_loss, coord_loss,output = Yolo(training=training, num_classes=num_classes, weights=weights)([image, gt_boxes])
-
-    model = keras.models.Model(inputs=inputs, outputs=[cls_loss, object_loss, noobject_loss, coord_loss,output])
-    return model
-

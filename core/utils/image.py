@@ -27,6 +27,10 @@ import cv2
 from PIL import Image
 
 def read_image_bgr(path):
+    '''
+    :param path:
+    :return: (h, w, 3)
+    '''
     try:
         image = np.asarray(Image.open(path).convert('RGB'))
     except Exception as ex:
@@ -54,9 +58,19 @@ def preprocess_image(x):
 
     return x
 
-def resize_image(img, size=(448, 448)):
+def resize_image(image, min_side=448, max_side=448):
+    '''
+    resize image to dsize
+    :param img: input (h, w, 3) = (rows, cols, 3)
+    :param size:
+    :return: out (h, w, 3)
+    '''
+    (h, w, _) = image.shape
+
+    scale = np.asarray((min_side, max_side),dtype=float) / np.asarray((h, w),dtype=float)
 
     # resize the image with the computed scale
-    img = cv2.resize(img, size, fx=None, fy=None)
+    # cv2.resize(image, (w, h))
+    img = cv2.resize(image, (min_side, max_side))
 
-    return img
+    return img, scale

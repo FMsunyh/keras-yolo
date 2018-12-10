@@ -110,10 +110,6 @@ logs/
 *.cpkt
 
 imgs/
-*.jpg
-*.JPG
-*.PNG
-*.png
 
 /model
 output

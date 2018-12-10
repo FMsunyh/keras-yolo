@@ -36,11 +36,12 @@ class Generator(object):
     def __init__(
         self,
         transform_generator = None,
-        batch_size=1,
+        batch_size=2,
         group_method='random',  # one of 'none', 'random', 'ratio'
         shuffle_groups=True,
-        image_min_side=600,
-        image_max_side=1000,
+        image_min_side=448,
+        image_max_side=448,
+        cell_size=7,
         transform_parameters=None,
     ):
         self.transform_generator    = transform_generator
@@ -49,6 +50,7 @@ class Generator(object):
         self.shuffle_groups         = shuffle_groups
         self.image_min_side         = image_min_side
         self.image_max_side         = image_max_side
+        self.cell_size              = cell_size
         self.transform_parameters   = transform_parameters
 
         self.group_index = 0
@@ -134,7 +136,8 @@ class Generator(object):
         image, image_scale = self.resize_image(image)
 
         # apply resizing to annotations too
-        annotations[:, :4] *= image_scale
+        annotations[:, 0:4:2] *= image_scale[1]
+        annotations[:, 1:4:2] *= image_scale[0]
 
         return image, annotations
 
@@ -174,8 +177,34 @@ class Generator(object):
         return image_batch
 
     def compute_targets(self, image_group, annotations_group):
-        targets = np.asarray(annotations_group)
-        return targets
+        # same size for all batch image
+        h, w, _ = image_group[0].shape
+
+        targets =  np.zeros((len(annotations_group), self.cell_size, self.cell_size, 25))
+        for annotation_index, annotation in enumerate(annotations_group):
+            label = np.zeros((self.cell_size, self.cell_size, 25))
+            
+            box_chw =np.stack([
+                (annotation[:,0] + annotation[:,2])/2,
+                (annotation[:,1] + annotation[:,3])/2,
+                (annotation[:,2] - annotation[:,0]),
+                (annotation[:,3] - annotation[:,1])], axis=1)
+            # cls_ind = [self.label_to_name(label) for label in annotation[:, 4]]
+            cls_ind = np.int32(annotation[:, 4])
+
+            # x_ind， y_ind
+            x_ind = np.int32(box_chw[:, 0] * self.cell_size / w)
+            y_ind = np.int32(box_chw[:, 1] * self.cell_size / h)
+
+            index =  np.where(label[y_ind, x_ind,0]!=1)
+            if len(index):
+                label[y_ind[index], x_ind[index], 0] = 1
+                label[y_ind[index], x_ind[index], 1:5] = box_chw[index,...]
+                label[y_ind[index], x_ind[index], 5+cls_ind[index]] = 1
+
+            targets[annotation_index] = label
+
+        return np.asarray(targets)
 
     def compute_input_output(self, group):
         # load images and annotations
