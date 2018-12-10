@@ -1,22 +1,14 @@
 # keras-yolo
 ## Introduction to object detection
-
-Detecting vehicles in a video stream is an object detection problem. An object detection problem can be approached as either a classification problem or a regression problem. As a classification problem, the image are divided into small patches, each of which will be run through a classifier to determine whether there are objects in the patch. Then the bounding boxes will be assigned to locate around patches that are classified with high probability of present of an object. In the regression approach, the whole image will be run through a convolutional neural network to directly generate one or more bounding boxes for objects in the images.
-
-| classification                                                                                                                               | regression                                               |
-|----------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------|
-| Classification on portions of the image to determine objects, generate bounding boxes for regions that have positive classification results. | Regression on the whole image to generate bounding boxes |
-| 1. sliding window + HOG 2. sliding window + CNN 3. region proposals + CNN                                                                    | generate bounding box coordinates directly from CNN      |
-| RCNN, Fast-RCNN, Faster-RCNN                                                                                                                 | SSD, YOLO                                                |
+。。。                                          |
 
 In this project, we will use YOLO v1, since it's easy to implement and are reasonably fast.
-
 
 ## The YOLO v1
 
 ### Architecture of the convolutional neural network
 
-The YOLO v1 is consist of 9 convolution layers and 3 full connected layers. Each convolution layer consists of convolution, leaky relu and max pooling operations. The first 9 convolution layers can be understood as the feature extractor, whereas the last three full connected layers can be understood as the "regression head" that predicts the bounding boxes.
+The YOLO v1 is consist of 24 convolution layers and 3 full connected layers. Each convolution layer consists of convolution, leaky relu and max pooling operations. The first 24 convolution layers can be understood as the feature extractor, whereas the last three full connected layers can be understood as the "regression head" that predicts the bounding boxes.
 
 ![model](./output_images/yolo_network.PNG)
 
@@ -68,10 +60,8 @@ The 1470 vector output is divided into three parts, giving the probability, conf
 
 ### Use pretrained weights
 
-Training the YOLO network is time consuming. We will download the pretrained weights from [here](https://drive.google.com/file/d/0B1tW_VtY7onibmdQWE1zVERxcjQ/view?usp=sharing) (172M) and load them into our Keras model. The weight loading function is in the `load_weight` function in the utili class
-
 ```
-load_weights(model,'./yolo-tiny.weights')
+load_weights(model,'./yolo.weights')
 ```
 
 Note that tensorflow is used for the backend in this project.
