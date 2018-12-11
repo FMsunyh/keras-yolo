@@ -30,13 +30,11 @@ from core.models import Yolo
 def create_yolo(inputs, training=True, num_classes=21, weights=None, *args, **kwargs):
     if training:
         image, gt_boxes = inputs
-        image_shape = core.layers.Dimensions()(image)
     else:
         image = inputs
-        image_shape = core.layers.Dimensions()(image)
 
-    cls_loss, object_loss, noobject_loss, coord_loss,output = Yolo(training=training, num_classes=num_classes, weights=weights)([image, gt_boxes])
+    coord_loss, object_loss, noobject_loss, cls_loss, output = Yolo(training=training, num_classes=num_classes, weights=weights)([image, gt_boxes])
 
-    model = keras.models.Model(inputs=inputs, outputs=[cls_loss, object_loss, noobject_loss, coord_loss,output])
+    model = keras.models.Model(inputs=inputs, outputs=[coord_loss, object_loss, noobject_loss, cls_loss,output])
     return model
 

@@ -162,6 +162,6 @@ class Yolo(object):
         x = self.fc_2(x)
 
         if self.training:
-            cls_loss, object_loss, noobject_loss, coord_loss = self.loss([x, gt_boxes])
+            coord_loss, object_loss, noobject_loss, cls_loss = self.loss([x, gt_boxes, image_shape])
 
-        return cls_loss, object_loss, noobject_loss, coord_loss, x
+        return coord_loss, object_loss, noobject_loss, cls_loss, x

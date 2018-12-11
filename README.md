@@ -48,6 +48,10 @@ the detail of the architecture is in list in this table
 - Fully Connected Layer	    Input Number: 512, Output Number: 4096
 - Fully Connected Layer	    Input Number: 4096, Output Number: 7×7×30
 
+
+### Loss
+![loss](./output_images/loss.jpg)
+
 In this project, we will use Keras to construct the YOLO model.
 
 ### Postprocessing

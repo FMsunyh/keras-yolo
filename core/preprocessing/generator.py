@@ -196,6 +196,7 @@ class Generator(object):
             x_ind = np.int32(box_chw[:, 0] * self.cell_size / w)
             y_ind = np.int32(box_chw[:, 1] * self.cell_size / h)
 
+            #Each grid cell predicts only one object
             index =  np.where(label[y_ind, x_ind,0]!=1)
             if len(index):
                 label[y_ind[index], x_ind[index], 0] = 1
