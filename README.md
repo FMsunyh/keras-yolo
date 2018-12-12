@@ -1,4 +1,8 @@
-# keras-yolo
+# keras-yolo (YOLO v1)
+This repository presents a quick and simple implementation of YOLO v1 object detection using Keras library with Tensorflow backend.
+- keras 2.2.4
+- Tensorflow 1.12.0
+
 ## Introduction to object detection
 。。。                                          |
 

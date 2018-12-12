@@ -49,9 +49,9 @@ def parse_args():
 
     pascal_parser = subparsers.add_parser('pascal')
     pascal_parser.add_argument('pascal_path', help='Path to dataset directory (ie. /tmp/VOCdevkit).', default='/home/syh/train_data/VOCdevkit/VOC2007')
-    parser.add_argument('--root_path', help='Size of the batches.', default= os.path.join(os.path.expanduser('~'), 'keras_frcnn'), type=str)
+    parser.add_argument('--root_path', help='Size of the batches.', default= os.path.join(os.path.expanduser('~'), 'keras_yolo'), type=str)
 
-    parser.add_argument('--batch-size', help='Size of the batches.', default=1, type=int)
+    parser.add_argument('--batch-size', help='Size of the batches.', default=4, type=int)
 
     args = parser.parse_args()
 
@@ -88,6 +88,7 @@ if __name__ == '__main__':
     train_generator = PascalVocGenerator(
         args.pascal_path,
         'trainval',
+        batch_size=args.batch_size,
         transform_generator = train_image_data_generator
     )
 
@@ -95,18 +96,19 @@ if __name__ == '__main__':
     test_generator = PascalVocGenerator(
         args.pascal_path,
         'test',
+        batch_size=args.batch_size,
         transform_generator = test_image_data_generator
     )
 
     # start training
-    batch_size = 2
+
     model.fit_generator(
         generator=train_generator,
-        steps_per_epoch=len(train_generator.image_names) // batch_size,
+        steps_per_epoch=len(train_generator.image_names) // args.batch_size,
         epochs=100,
         verbose=1,
         validation_data=test_generator,
-        validation_steps=500,  # len(test_generator.image_names) // batch_size,
+        validation_steps=len(test_generator.image_names) // args.batch_size,
         callbacks=[
             keras.callbacks.ModelCheckpoint(os.path.join(args.root_path, 'snapshots/yolo(v1)_voc_best.h5'), monitor='val_loss', verbose=1, mode='min', save_best_only=True),
             keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=1, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0),

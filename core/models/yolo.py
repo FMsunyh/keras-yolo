@@ -61,7 +61,7 @@ class Yolo(object):
         no_bias_kwargs.update(kwargs)
         return compose(
             self._Conv2D(*args, **no_bias_kwargs),
-            BatchNormalization(),
+            BatchNormalization(), # no bn in yolo v1
             # ReLU())
             LeakyReLU(alpha=0.1))
 
@@ -139,6 +139,7 @@ class Yolo(object):
 
         x = self.out_6(x)
         x = self.out_7(x)
+        x = self.out_8(x)
         x = self.out_9(x)
         x = self.out_10(x)
         x = self.out_11(x)
