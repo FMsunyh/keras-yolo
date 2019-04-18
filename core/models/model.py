@@ -27,7 +27,7 @@ import core
 from core.models import Yolo
 
 
-def create_yolo(inputs, training=True, num_classes=21, weights=None, *args, **kwargs):
+def create_yolo(inputs, training=True, num_classes=20, weights=None, *args, **kwargs):
     if training:
         image, gt_boxes = inputs
     else:
